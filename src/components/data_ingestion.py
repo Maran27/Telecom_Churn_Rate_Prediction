@@ -9,8 +9,8 @@ import pandas as pd
 from sklearn.model_selection import train_test_split
 from dataclasses import dataclass  # used to create the class variables
 #
-# from src.components.model_trainer import ModelTrainer
-# from src.components.model_trainer import ModelTrainerConfig
+from src.components.model_trainer import ModelTrainer
+from src.components.model_trainer import ModelTrainerConfig
 
 
 @dataclass  # directly define the class variable
@@ -28,6 +28,7 @@ class DataIngestion:
         logging.info("Data Ingestion Started")
         try:
             df = pd.read_csv('notebook/data/churn.csv')
+            df['TotalCharges'] = pd.to_numeric(df['TotalCharges'], errors='coerce')
             logging.info('Data Frame Formed With Data')
             os.makedirs(os.path.dirname(self.ingestion_config.train_data_path), exist_ok=True)
             df.to_csv(self.ingestion_config.raw_data_path, index=False, header=True)
@@ -52,5 +53,5 @@ if __name__ == "__main__":
     data_transformation = DataTransformation()
     train_arr, test_arr, _ = data_transformation.initiate_data_transformation(train_data, test_data)
 
-    # modeltrainer = ModelTrainer()
-    # print(modeltrainer.initiate_model_trainer(train_arr, test_arr))
+    modeltrainer = ModelTrainer()
+    print(modeltrainer.initiate_model_trainer(train_arr, test_arr))
